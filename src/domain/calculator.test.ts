@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { calculateDates, formatResultsCopy } from './calculator'
-import { formatLongDate } from './dates'
+import { calculateDates, excelCutoffMatchDate, formatResultsCopy } from './calculator'
+import { addCalendarDays, formatLongDate } from './dates'
 
 describe('30-day date calculator', () => {
   it('computes donation and notice dates from a match date', () => {
@@ -19,5 +19,27 @@ describe('30-day date calculator', () => {
 
   it('formats long dates for the results cards', () => {
     expect(formatLongDate('2026-09-16')).toBe('Wednesday, 16 September 2026')
+  })
+
+  it('gives the Excel cutoff as the match date whose notice is today', () => {
+    expect(excelCutoffMatchDate('2026-10-20')).toBe('2026-09-27')
+    expect(excelCutoffMatchDate('2026-10-21')).toBe('2026-09-28')
+    expect(excelCutoffMatchDate('2026-10-19')).toBe('2026-09-26')
+  })
+
+  it('moves the Excel cutoff forward one day when today moves forward one day', () => {
+    const first = excelCutoffMatchDate('2026-01-01')
+    const next = excelCutoffMatchDate('2026-01-02')
+    expect(next).toBe(addCalendarDays(first, 1))
+  })
+
+  it('rolls the Excel cutoff across the new year', () => {
+    expect(excelCutoffMatchDate('2026-01-05')).toBe('2025-12-13')
+  })
+
+  it('treats the cutoff as the match date that calculates back to today', () => {
+    const today = '2026-10-20'
+    const cutoff = excelCutoffMatchDate(today)
+    expect(calculateDates(cutoff).noticeDate).toBe(today)
   })
 })

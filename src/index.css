@@ -87,7 +87,83 @@ button:focus-visible,
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 56px 24px 32px;
+  padding: 196px 24px 32px;
+}
+
+.excel-banner {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  width: min(220px, calc(100vw - 32px));
+  padding: 14px 16px 13px;
+  background: var(--navy);
+  color: #f7f1e6;
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+}
+
+.excel-banner-kicker {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e4c48a;
+}
+
+.excel-banner-lead {
+  margin: 10px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(247, 241, 230, 0.72);
+}
+
+.excel-banner-date {
+  margin: 2px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--white);
+}
+
+.excel-banner-day {
+  font-size: 2rem;
+}
+
+.excel-banner-month {
+  font-size: 1.15rem;
+}
+
+.excel-banner-year {
+  margin: 6px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(247, 241, 230, 0.78);
+}
+
+.excel-banner-note {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(247, 241, 230, 0.92);
+}
+
+.excel-banner-today {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(247, 241, 230, 0.18);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #e4c48a;
 }
 
 .app-frame {
@@ -588,6 +664,12 @@ button:focus-visible,
   }
 }
 
+@media (min-width: 1400px) {
+  .app {
+    padding-top: 56px;
+  }
+}
+
 @media (max-width: 800px) {
   .how-track {
     grid-template-columns: 1fr;
@@ -635,7 +717,13 @@ button:focus-visible,
 
 @media (max-width: 720px) {
   .app {
-    padding: 36px 16px 24px;
+    padding: 20px 16px 24px;
+  }
+
+  .excel-banner {
+    position: static;
+    width: min(840px, 100%);
+    margin-bottom: 4px;
   }
 
   .match-card,

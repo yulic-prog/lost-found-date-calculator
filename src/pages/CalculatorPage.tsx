@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { DatePicker } from '../components/DatePicker'
+import { ExcelCutoffBanner } from '../components/ExcelCutoffBanner'
 import { calculateDates, formatResultsCopy } from '../domain/calculator'
 import { getDisplayParts } from '../domain/dates'
 
@@ -52,6 +53,7 @@ export function CalculatorPage() {
 
   return (
     <div className="app">
+      <ExcelCutoffBanner />
       <div className="app-frame">
         <header className="hero">
           <p className="eyebrow">Lost &amp; Found</p>

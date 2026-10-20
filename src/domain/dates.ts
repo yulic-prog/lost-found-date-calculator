@@ -44,11 +44,44 @@ export function monthNameLong(month: number): string {
   return MONTHS_LONG[month - 1] ?? ''
 }
 
+export const PACIFIC_TIME_ZONE = 'America/Los_Angeles'
+
+/** Calendar date in Pacific time, including daylight saving. */
 export function todayISO(now = new Date()): string {
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const day = String(now.getDate()).padStart(2, '0')
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: PACIFIC_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(now)
+  const year = parts.find((part) => part.type === 'year')?.value
+  const month = parts.find((part) => part.type === 'month')?.value
+  const day = parts.find((part) => part.type === 'day')?.value
+  if (!year || !month || !day) {
+    throw new Error('Could not read the Pacific date')
+  }
   return `${year}-${month}-${day}`
+}
+
+/** Milliseconds until the next Pacific midnight. Keeps an open page on the right day. */
+export function msUntilNextPacificDate(now = new Date()): number {
+  const nextDate = addCalendarDays(todayISO(now), 1)
+  const { year, month, day } = parseISODate(nextDate)
+  for (const utcHour of [8, 7]) {
+    const candidate = new Date(Date.UTC(year, month - 1, day, utcHour, 0, 0))
+    if (todayISO(candidate) !== nextDate) continue
+    const hour = new Intl.DateTimeFormat('en-US', {
+      timeZone: PACIFIC_TIME_ZONE,
+      hour: '2-digit',
+      hourCycle: 'h23',
+    })
+      .formatToParts(candidate)
+      .find((part) => part.type === 'hour')?.value
+    if (Number(hour) === 0) {
+      return Math.max(1000, candidate.getTime() - now.getTime())
+    }
+  }
+  return Math.max(1000, 60 * 60 * 1000)
 }
 
 export function isValidISODate(value: string): boolean {

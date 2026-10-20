@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
 import { excelCutoffMatchDate } from '../domain/calculator'
-import { getDisplayParts, todayISO } from '../domain/dates'
+import { getDisplayParts, msUntilNextPacificDate, todayISO } from '../domain/dates'
 
 function useTodayISO() {
   const [today, setToday] = useState(() => todayISO())
 
   useEffect(() => {
-    const now = new Date()
-    const nextMidnight = new Date(now)
-    nextMidnight.setHours(24, 0, 0, 0)
-    const delay = Math.max(1000, nextMidnight.getTime() - now.getTime())
-    const timer = window.setTimeout(() => setToday(todayISO()), delay)
+    const timer = window.setTimeout(() => setToday(todayISO()), msUntilNextPacificDate())
     return () => window.clearTimeout(timer)
   }, [today])
 

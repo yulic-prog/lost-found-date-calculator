@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { addCalendarDays, isValidISODate } from '../domain/dates'
+import { addCalendarDays, isValidISODate, msUntilNextPacificDate, todayISO } from '../domain/dates'
 
 describe('calendar date arithmetic', () => {
   it('rejects impossible calendar dates', () => {
@@ -36,6 +36,21 @@ describe('calendar date arithmetic', () => {
     expect(addCalendarDays('2025-12-02', 30)).toBe('2026-01-01')
     expect(addCalendarDays('2025-12-15', 30)).toBe('2026-01-14')
     expect(addCalendarDays('2025-12-31', 30)).toBe('2026-01-30')
+  })
+
+  it('reads today in Pacific time, including daylight saving', () => {
+    expect(todayISO(new Date('2026-10-20T00:30:00Z'))).toBe('2026-10-19')
+    expect(todayISO(new Date('2026-10-20T07:00:00Z'))).toBe('2026-10-20')
+    expect(todayISO(new Date('2026-11-02T07:30:00Z'))).toBe('2026-11-01')
+    expect(todayISO(new Date('2026-11-02T08:00:00Z'))).toBe('2026-11-02')
+  })
+
+  it('waits until the next Pacific midnight', () => {
+    const now = new Date('2026-10-20T00:30:00Z')
+    const delay = msUntilNextPacificDate(now)
+    const rollsAt = new Date(now.getTime() + delay)
+    expect(todayISO(new Date(rollsAt.getTime() - 1000))).toBe('2026-10-19')
+    expect(todayISO(rollsAt)).toBe('2026-10-20')
   })
 
   it('subtracts calendar days across month and year boundaries', () => {

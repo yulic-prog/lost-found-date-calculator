@@ -29,4 +29,6 @@ All calculations use calendar days.
 
 The corner banner shows the latest **Match Date** to enter in the 7-Day Notice Excel today. That is the match date whose 7-Day Notice falls on today (23 calendar days earlier).
 
+Today follows Pacific time (`America/Los_Angeles`), including daylight saving.
+
 Example: on 20 October the banner reads **27 September**. Enter anything from that date and earlier. Don't go over. The date moves forward one day every calendar day.
